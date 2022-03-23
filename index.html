@@ -27,6 +27,9 @@
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
 
+  <!-- include Alpine js-->
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+
   <!-- =======================================================
   * Template Name: MyResume - v4.7.0
   * Template URL: https://bootstrapmade.com/free-html-bootstrap-template-my-resume/
@@ -652,13 +655,13 @@
               <div class="email">
                 <i class="bi bi-envelope"></i>
                 <h4>Email:</h4>
-                <p>info@example.com</p>
+                <p>_john@serra.us_</p>
               </div>
 
               <div class="phone">
                 <i class="bi bi-phone"></i>
-                <h4>Call:</h4>
-                <p>+1 5589 55488 55s</p>
+                <h4>Telegram:</h4>
+                <p><a href="https://t.me/johnserra">https://t.me/johnserra</a></p>
               </div>
 
             </div>
@@ -667,20 +670,20 @@
 
           <div class="col-lg-8 mt-5 mt-lg-0">
 
-            <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+            <form action="/contact" method="post" role="form" class="alpine-form" x-data="contactFORM()" @submit.prevent="submitData">
               <div class="row">
                 <div class="col-md-6 form-group">
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required x-model="formData.name">
                 </div>
                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required x-model="formData.email">
                 </div>
               </div>
               <div class="form-group mt-3">
-                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required x-model="formData.subject">
               </div>
               <div class="form-group mt-3">
-                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+                <textarea class="form-control" name="message" rows="5" placeholder="Message" required x-model="formData.message"></textarea>
               </div>
               <div class="my-3">
                 <div class="loading">Loading</div>
@@ -688,7 +691,37 @@
                 <div class="sent-message">Your message has been sent. Thank you!</div>
               </div>
               <div class="text-center"><button type="submit">Send Message</button></div>
+              <p x-text="message"></p>
             </form>
+            <script>
+              function contactFORM() {
+                return {
+                  formData: {
+                    name: '',
+                    email: '',
+                    subject: '',
+                    message: ''
+                  },
+                message: '',
+                
+                submitDATA() {
+                  this.message=''
+
+                  fetch('/contact', {
+                    method: 'POST',
+                    headers: { 'Content-type': 'application/json' },
+                    body: JSON.stringify(this.formData)
+                  })
+                  .then(() => {
+                    this.message = 'Form successfully submited!'
+                  })
+                  .catch(() => {
+                    this.message = 'Ooops! Something went wrong...'
+                  })
+                }
+              }
+             }
+            </script>
 
           </div>
 
